@@ -70,64 +70,56 @@ Template.website_list.helpers({
 
 Template.website_item.events({
 	"click .js-upvote":function(event){
-		// example of how you can access the id for the website in the database
-		// (this is the data context for the template)
-		var website_id = this._id;
-    var webdata = Websites.findOne({_id:website_id});
 
-		console.log("Up voting website with id "+website_id);
+    // check if user is authorized
+    if (Meteor.user()) {
 
-		// put the code in here to add a vote to a website!
-    if (Meteor.user()){
       var user_id = Meteor.user()._id;
+
+      var website_id = this._id;
+      var webdata = Websites.findOne({_id:website_id});
+
+      // put the code in here to remove a vote from a website!
 
       if( webdata['upvote'].indexOf(user_id) < 0 ) {
         webdata['upvote'].push(user_id);
-        Websites.update({_id:website_id},
-                      {$set: {upvote:webdata['upvote']}});
-        Websites.update({_id:website_id},
-                      {$set: {upvotecount:webdata['upvote'].length}});
       }
 
       if( webdata['downvote'].indexOf(user_id) >= 0 ) {
         webdata['downvote'].splice(webdata['downvote'].indexOf(user_id),1);
-        Websites.update({_id:website_id},
-                      {$set: {downvote:webdata['downvote']}});
-        Websites.update({_id:website_id},
-                      {$set: {downvotecount:webdata['downvote'].length}});
       }
+
+      Meteor.call( "updateVote", website_id,
+        webdata['upvote'], webdata['upvote'].length,
+        webdata['downvote'], webdata['downvote'].length
+      );
     }
 
     return false;// prevent the button from reloading the page
 	},
 	"click .js-downvote":function(event){
 
-		// example of how you can access the id for the website in the database
-		// (this is the data context for the template)
-    var website_id = this._id;
-    var webdata = Websites.findOne({_id:website_id});
+    // check if user is authorized
+    if (Meteor.user()) {
 
-		console.log("Down voting website with id "+website_id);
-
-		// put the code in here to remove a vote from a website!
-    if (Meteor.user()){
       var user_id = Meteor.user()._id;
 
+      var website_id = this._id;
+      var webdata = Websites.findOne({_id:website_id});
+
+      // put the code in here to remove a vote from a website!
       if( webdata['downvote'].indexOf(user_id) < 0 ) {
         webdata['downvote'].push(user_id);
-        Websites.update({_id:website_id},
-                      {$set: {downvote:webdata['downvote']}});
-        Websites.update({_id:website_id},
-                      {$set: {downvotecount:webdata['downvote'].length}});
       }
 
       if( webdata['upvote'].indexOf(user_id) >= 0 ) {
         webdata['upvote'].splice(webdata['upvote'].indexOf(user_id),1);
-        Websites.update({_id:website_id},
-                      {$set: {upvote:webdata['upvote']}});
-        Websites.update({_id:website_id},
-                      {$set: {upvotecount:webdata['upvote'].length}});
       }
+
+      Meteor.call( "updateVote", website_id,
+        webdata['upvote'], webdata['upvote'].length,
+        webdata['downvote'], webdata['downvote'].length
+      );
     }
 
 		return false;// prevent the button from reloading the page
@@ -143,19 +135,10 @@ Template.website_form.events({
 
     console.log("url: "+url+" title:"+title+" description:"+description);
 
-    if (Meteor.user()){
-      Websites.insert({
-   		  title:title,
-   		  url:url,
-   		  description:description,
-   		  createdOn:new Date(),
-        upvote:[],
-        downvote:[],
-        upvotecount:0,
-        downvotecount:0
-   	  });
-    }
-    window.location='/';
+    // Inster new site into database
+    Meteor.call("addSite", url, title, description);
+
+    //window.location='/';
 		return false;// stop the form submit from reloading the page
 	}
 });
