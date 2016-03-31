@@ -1,35 +1,32 @@
 /**
- * Shared librarys
+ *
  *
  * @author Stan Chen
  */
 
-/////
-// collections
-/////
+/* ---------------------------------------------------- +/
+
+## Items ##
+
+All code related to the Items collection goes here.
+
+/+ ---------------------------------------------------- */
+
 Websites = new Mongo.Collection("websites");
 
-/////
-// client
-/////
-if (Meteor.isClient) {
-  // This code only runs on the client
-  Meteor.subscribe("Websites");
-}
+// Allow/Deny
 
-/////
-// server
-/////
-if (Meteor.isServer) {
-  // This code only runs on the server
-  Meteor.publish('Websites', function() {
-    return Websites.find();
-  });
-}
+Websites.allow({
+  insert: function(userId, doc){
+    return can.createItem(userId);
+  },
+  update: function(userId, doc, fieldNames, modifier){
+    return can.editItem(userId, doc);
+  }
+});
 
-/////
-// security methods for collecitons
-/////
+// Methods
+
 Meteor.methods({
   addSite: function (url,title,description) {
     // Make sure the user is logged in before inserting a new site

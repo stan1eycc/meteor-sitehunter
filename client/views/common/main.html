@@ -1,0 +1,87 @@
+<template name="home">
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Site Hunter!!</h1>
+      <p>
+        Share and vote your favorite web sites here. Sign up/in by your email before you join the discussion. <b>Each account has a vote for each site only.</b>
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+    {{> website_list}}
+    <hr>
+    <footer>
+      <p>&copy; 2016 Pure Expectation Company, Inc.</p>
+    </footer>
+  </div> <!-- /container -->
+</template>
+
+<!-- template that displays several website items -->
+<template name="website_list">
+  <div class="row">
+    {{#each websites}}
+	  {{>website_item}}
+	  {{/each}}
+  </div>
+</template>
+
+<!-- template that displays individual website entries -->
+<template name="website_item">
+  <div class="col-md-6">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3><a href="/{{_id}}">{{title}}</a></h3>
+      </div>
+      <div class="panel-body">
+        <p>{{description}}</p>
+        <div class="text-right"><small>{{createdOn}}</small></div>
+      </div>
+      <div class="panel-footer text-right">
+          <b>Vote:&nbsp;</b>
+          {{#if currentUser}}
+          <a href="#" class="btn btn-default js-upvote">
+              <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+            &nbsp;{{upvotecount}}&nbsp;
+          </a>
+          <a href="#" class="btn btn-default js-downvote">
+            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+            &nbsp;{{downvotecount}}&nbsp;
+          </a>
+          {{else}}
+          <a href="#" class="btn btn-default js-upvote" disabled="true">
+              <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+            &nbsp;{{upvotecount}}&nbsp;
+          </a>
+          <a href="#" class="btn btn-default js-downvote" disabled="true">
+            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+            &nbsp;{{downvotecount}}&nbsp;
+          </a>
+          {{/if}}
+      </div>
+    	<!-- you will be putting your up and down vote buttons in here! -->
+    </div>
+  </div>
+</template>
+
+<template name="detail">
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1>{{title}}</h1>
+      <p>{{description}}</p>
+      <p><a class="btn btn-primary btn-lg" href="{{url}}" role="button">Link &raquo;</a></p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="comment-section">
+      {{> commentsBox id=_id}}
+    </div>
+    <hr>
+    <footer>
+      <p>&copy; 2016 Pure Expectation Company, Inc.</p>
+    </footer>
+  </div> <!-- /container -->
+</template>

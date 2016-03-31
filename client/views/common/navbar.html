@@ -1,0 +1,62 @@
+<template name="navbar">
+  <!-- navbar  - you will be putting the login functions here -->
+  <nav class="navbar navbar-fixed-top navbar-inverse">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Site Hunter</a>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          {{> search_bar}}
+          {{#if currentUser}}
+            {{> website_form}}
+          {{/if}}
+    			{{> loginButtons}}
+    		</ul>
+      </div><!-- /.nav-collapse -->
+    </div><!-- /.container -->
+  </nav><!-- /.navbar -->
+</template>
+
+<template name="website_form">
+  <li class="dropdown">
+    <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Site
+    </a>
+    <div class="dropdown-menu" style="padding:17px;">
+      <form class="js-save-website-form">
+        <div class="form-group">
+  		    <label for="url">Site address</label>
+  		    <input type="text" class="form-control" id="url" placeholder="http://www.mysite.com">
+  		  </div>
+        <div class="form-group">
+  		    <label for="title">Title</label>
+  		    <input type="text" class="form-control" id="title" placeholder="Mysite">
+  		  </div>
+        <div class="form-group">
+		      <label for="description">Description</label>
+		      <input type="text" class="form-control" id="description" placeholder="I found this site really useful for ...">
+		    </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+      </form>
+    </div>
+  </li>
+</template>
+
+<template name="search_bar">
+  <form class="navbar-form navbar-left">
+    <input type="text" class="form-control js-search" id="searchtxt" placeholder="Search...">
+  </form>
+</template>
